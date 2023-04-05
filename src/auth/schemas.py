@@ -1,23 +1,15 @@
 from typing import Optional
-from fastapi_users import schemas
+from pydantic import BaseModel
 
-
-class UserRead(schemas.BaseUser[int]):
-    id: int
+class UserLogin(BaseModel):
     email: str
-    name: str
+    password: str
 
-    class Config:
-        orm_mode = True
-
-
-class UserCreate(schemas.BaseUserCreate):
+class UserRegister(BaseModel):
     email: str
-    name: str
-    surname: str
-    patronymic: str
+    hashed_password: str
+    first_name: str
+    second_name: str
+    patronymic: Optional[str]
+    birthday: str
     is_hr: bool
-
-
-# class UserUpdate(schemas.BaseUserUpdate):
-#     pass

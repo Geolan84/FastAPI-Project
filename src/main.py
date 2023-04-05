@@ -1,40 +1,24 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 import uvicorn
 
-#from fastapi_users import fastapi_users, FastAPIUsers
-from auth.base_config import auth_backend, fastapi_users
-from auth.schemas import UserRead, UserCreate
 from resume.router import router as router_resume
+from auth.router import router as auth_router
 
 
-app = FastAPI(
-    title="Smartbridge"
-)
+app = FastAPI(title="Smartbridge")
 
 
-
-app.include_router(
-    fastapi_users.get_auth_router(auth_backend),
-    prefix="/auth/jwt",
-    tags=["auth"],
-)
+@app.get("/")
+def read_root():
+    return "Hello from SmartBridge API Server."
 
 app.include_router(
-    fastapi_users.get_register_router(UserRead, UserCreate),
-    prefix="/auth",
-    tags=["auth"],
+    router=auth_router,
 )
 
 app.include_router(
     router=router_resume
 )
 
-
-
-# @app.get("/protected-route")
-# def protected_route(user: User = Depends(current_user)):
-#     return f"Hello, {user.name}"
-
-
 if __name__ == "__main__":
-    uvicorn.run("main:app", port=8080, log_level="info")
+    uvicorn.run("main:app", port=8080, log_level="info", reload=True)
