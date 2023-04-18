@@ -28,10 +28,10 @@ async def login(user_log: UserLogin, session=Depends(get_async_session)):
         )
     data = {
         'user_id': user[0],
-        'is_hr': user[-3]
+        'is_hr': user[-3],
     }
     token = create_access_token(data=data)
-    return {'token': token, 'is_hr': user[-3]}
+    return {'token': token, 'is_hr': user[-3], 'user_id': user[0]}
 
 @router.post("/forgot")
 async def renew_password(email: str, session=Depends(get_async_session)):

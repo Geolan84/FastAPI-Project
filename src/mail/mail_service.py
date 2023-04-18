@@ -7,8 +7,6 @@ class MailSender:
     SMTP_PORT = 587
     SERVER = "smtp.gmail.com"
 
-    #MESSAGE_RESET = """Для сброса пароля перейдите по ссылке: {0} Если это не вы инициировали сброс пароля, ничего нажимать не нужно."""
-
     MESSAGE_RESET = """
     <!DOCTYPE html>
     <html>

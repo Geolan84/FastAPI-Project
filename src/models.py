@@ -32,7 +32,7 @@ region = Table(
 know_skills = Table(
     "know_skills",
     metadata,
-    Column("resume", Integer, ForeignKey("resume.resume_id")),
+    Column("resume", Integer, ForeignKey("resume.resume_id", ondelete='CASCADE')),
     Column("skill", Integer, ForeignKey("skills.skill_id"))
 )
 
@@ -52,12 +52,28 @@ skills = Table(
     Column("skill_name", String, nullable=False)
 )
 
+favorites = Table(
+    "favorites",
+    metadata,
+    Column("hr_id", Integer, ForeignKey("users.user_id", ondelete='CASCADE'), nullable=False),
+    Column("favorite_id", Integer, ForeignKey("resume.resume_id", ondelete='CASCADE'), nullable=False)
+)
+
+message_templates = Table(
+    "msg_templates",
+    metadata,
+    Column("template_id", Integer, primary_key=True, autoincrement=True),
+    Column("hr_id", Integer, ForeignKey("users.user_id", ondelete='CASCADE'), nullable=False),
+    Column("title", String, nullable=False),
+    Column("body", String, nullable=False)
+)
+
 # Анкета.
 resume = Table(
     "resume",
     metadata,
     Column("resume_id", Integer, primary_key=True, autoincrement=True),
-    Column("user_id", Integer, ForeignKey("users.user_id"), nullable=False),
+    Column("user_id", Integer, ForeignKey("users.user_id", ondelete='CASCADE'), nullable=False),
     Column("region", Integer, ForeignKey("region.geo_id"), nullable=False),
     Column("schedule", Enum('full time', 'epoch', 'flexible', 'part-time', 'remote', 'shift', name="schedule_enum", create_type = False)),
     Column("lower_salary", Integer),
