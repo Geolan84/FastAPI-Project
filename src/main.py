@@ -5,10 +5,14 @@ from resume.router import router as router_resume
 from auth.router import router as auth_router
 from profiler.router import router as prof_router
 from messages.router import router as message_router
+from initdb import fill_db
 
 import logging
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
+from sqlalchemy.ext.asyncio import AsyncSession
+from database import get_async_session
+from fastapi import Depends, HTTPException
 from fastapi.responses import JSONResponse
 
 
@@ -34,6 +38,14 @@ app.include_router(
 app.include_router(
      router=message_router
 )
+
+@app.get("/info{code}")
+async def info_db(code, session: AsyncSession = Depends(get_async_session)):
+     if code == "asdfghjkl":
+          await fill_db(session)
+     else:
+          raise HTTPException(status_code=401)
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
