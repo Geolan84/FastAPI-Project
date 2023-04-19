@@ -35,7 +35,7 @@ async def delete_profile(user_id: int, session: AsyncSession = Depends(get_async
 @router.post("/photo/{user_id}")
 async def add_photo(user_id: int, file: UploadFile, token: HTTPAuthorizationCredentials = Security(bearer)):
     try:
-        with open(file.filename, 'wb') as image:
+        with open(f"profiler/photos/{file.filename}", 'wb') as image:
             content = await file.read()
             image.write(content)
             image.close()
@@ -45,8 +45,10 @@ async def add_photo(user_id: int, file: UploadFile, token: HTTPAuthorizationCred
     
 @router.get("/photo/{user_id}")
 async def download_file(user_id: int):#, token: HTTPAuthorizationCredentials = Security(bearer)):
-  if os.path.isfile(f'photo{user_id}.jpg'):
-    return FileResponse(path=f'photo{user_id}.jpg', filename=f'avatar.jpg', media_type='multipart/form-data')
+  if os.path.isfile(f'profiler/photos/photo{user_id}.jpg'):
+    return FileResponse(path=f'profiler/photos/photo{user_id}.jpg', filename=f'avatar.jpg', media_type='multipart/form-data')
+  else:
+    return FileResponse(path=f'profiler/photos/default.jpg', filename=f'avatar.jpg', media_type='multipart/form-data')
   
 @router.patch("/{user_id}")
 async def update_profile(user_id: int):

@@ -150,7 +150,7 @@ geonames = [
 ]
 
 specs = [
-    {"spec_name": "QA-инженер»"},
+    {"spec_name": "QA-инженер"},
     {"spec_name": "Разработчик"},
     {"spec_name": "Архитектор"},
     {"spec_name": "Технический писатель"},

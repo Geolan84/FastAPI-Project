@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 
-@router.get("/resumes")
+@router.get("/resume")
 async def get_all_resumes(session: AsyncSession = Depends(get_async_session), token: HTTPAuthorizationCredentials = Security(bearer)):
     info = read_token(token)
     if info is None:
@@ -138,8 +138,24 @@ async def get_favorites(session: AsyncSession = Depends(get_async_session), toke
         raise HTTPException(status_code=400)
 
 @router.delete("/favorite/{resume_id}")
-async def delete_favorite():
-    pass
+async def delete_favorite(resume_id: int, session: AsyncSession = Depends(get_async_session), token: HTTPAuthorizationCredentials = Security(bearer)):
+    info = read_token(token)
+    if info is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authorized"
+        )
+    if not info[1]:
+        raise HTTPException(
+            status_code=403,
+            detail="You haven't rights to delete favorite"
+        )
+    try:
+        await ResumeRepository.remove_favorite(info[0], resume_id, session)
+        return Response(status_code=201)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=400)
 
 @router.post("/favorite/{resume_id}")
 async def add_favorite(resume_id: int, session: AsyncSession = Depends(get_async_session), token: HTTPAuthorizationCredentials = Security(bearer)):
